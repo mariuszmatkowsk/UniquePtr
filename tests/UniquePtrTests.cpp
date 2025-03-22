@@ -4,7 +4,11 @@
 
 using namespace foo;
 
-TEST(UniquePtr, test) {
-    EXPECT_EQ(1, 1);
+TEST(UniquePtr, canCreateDefault) {
+    UniquePtr<int> p;
+}
+
+TEST(UniquePtr, canCreateDefaultConstexpr) {
+    constexpr UniquePtr<int> p;
 }
 
