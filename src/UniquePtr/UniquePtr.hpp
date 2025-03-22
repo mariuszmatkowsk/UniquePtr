@@ -36,6 +36,8 @@ public:
     constexpr pointer       operator->() const noexcept { return  ptr_; }
     constexpr pointer       get()        const noexcept { return  ptr_; }
 
+    constexpr explicit operator bool() const noexcept { return ptr_; }
+
 private:
     pointer      ptr_{};
     deleter_type deleter_{};

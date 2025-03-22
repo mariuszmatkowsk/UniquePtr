@@ -72,5 +72,13 @@ TEST(UniquePtr, arrowOperator) {
     EXPECT_EQ(p->x, 10);
 }
 
+TEST(UniquePtr, convertToBool) {
+    constexpr UniquePtr<int> p1;
+    EXPECT_FALSE(p1);
+
+    UniquePtr<int> p2{new int{10}};
+    EXPECT_TRUE(p2);
+}
+
 
 
