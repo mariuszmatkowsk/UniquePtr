@@ -4,7 +4,7 @@ namespace foo {
 
 template <typename T>
 struct default_delete {
-    void operator()(T* ptr) {
+    constexpr void operator()(T* ptr) {
         delete ptr;
     }
 };
@@ -16,16 +16,25 @@ public:
     using pointer      = element_type*;
     using deleter_type = D;
 
-    explicit constexpr UniquePtr() : UniquePtr(nullptr) {}
+    explicit constexpr UniquePtr() noexcept : UniquePtr(nullptr) {}
 
-    explicit constexpr UniquePtr(pointer ptr) : ptr_{ptr}, deleter_{D{}} {}
+    explicit constexpr UniquePtr(pointer ptr) noexcept
+        : ptr_{ptr}, deleter_{D{}} {}
 
-    UniquePtr(const UniquePtr&) = delete;
+    constexpr ~UniquePtr() {
+        if (ptr_) deleter_(ptr_);
+    }
+
+    UniquePtr(const UniquePtr&)            = delete;
     UniquePtr& operator=(const UniquePtr&) = delete;
 
     // TODO: to be implemented
-    UniquePtr(UniquePtr&&) = default;
-    UniquePtr& operator=(UniquePtr&&) = default;
+    constexpr UniquePtr(UniquePtr&&)            noexcept = default;
+    constexpr UniquePtr& operator=(UniquePtr&&) noexcept = default;
+
+    constexpr element_type& operator*()  const noexcept { return *ptr_; }
+    constexpr pointer       operator->() const noexcept { return  ptr_; }
+    constexpr pointer       get()        const noexcept { return  ptr_; }
 
 private:
     pointer      ptr_{};
