@@ -175,4 +175,23 @@ TEST(UniquePtr, notEqualOperatorConstexpr) {
     EXPECT_FALSE(result);
 }
 
+TEST(UniquePtr, makeUniquePtr) {
+    const auto p = make_UniquePtr<int>(4);
+
+    EXPECT_EQ(*p, 4);
+}
+
+TEST(UniquePtr, makeUniquePtrWithCustomType) {
+    struct Foo {
+        int a{};
+        int b{};
+
+        constexpr auto operator<=>(const Foo&) const = default;
+    };
+
+    const auto p = make_UniquePtr<Foo>(3, 2);
+
+    Foo expected{.a = 3, .b = 2};
+    EXPECT_EQ(*p, expected);
+}
 

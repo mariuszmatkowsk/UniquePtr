@@ -85,4 +85,9 @@ private:
     // use [[msvc::no_unique_address]] instead
 };
 
+template <typename T, typename... Args>
+UniquePtr<T> make_UniquePtr(Args&&... args) {
+    return UniquePtr<T>(new T{std::forward<Args>(args)...});
+}
+
 }  // namespace foo
