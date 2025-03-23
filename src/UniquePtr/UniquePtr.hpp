@@ -50,8 +50,8 @@ public:
     }
 
     void reset(pointer new_ptr = pointer()) noexcept {
-        if (ptr_) deleter_(ptr_);
-        ptr_ = new_ptr;
+        auto old_pointer = std::exchange(ptr_, new_ptr);
+        if (old_pointer) deleter_(old_pointer);
     }
 
     constexpr void swap(UniquePtr& u) noexcept {
