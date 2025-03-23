@@ -80,5 +80,37 @@ TEST(UniquePtr, convertToBool) {
     EXPECT_TRUE(p2);
 }
 
+TEST(UniquePtr, release) {
+    UniquePtr<int> p{new int{3}};
+
+    auto ptr = p.release();
+
+    EXPECT_EQ(p.get(), nullptr);
+    EXPECT_EQ(*ptr, 3);
+
+    delete ptr;
+}
+
+TEST(UniquePtr, reset) {
+    UniquePtr p1{new int{7}};
+
+    p1.reset(new int{10});
+
+    EXPECT_EQ(*p1, 10);
+}
+
+TEST(UniquePtr, swap) {
+    UniquePtr p1{new int{7}};
+    UniquePtr p2{new int{9}};
+
+    ASSERT_EQ(*p1, 7);
+    ASSERT_EQ(*p2, 9);
+
+    p1.swap(p2);
+
+    EXPECT_EQ(*p1, 9);
+    EXPECT_EQ(*p2, 7);
+}
+
 
 
