@@ -84,8 +84,7 @@ public:
 
     constexpr explicit operator bool() const noexcept { return ptr_; }
 
-    friend std::ostream& operator<<(
-            std::ostream& os, const UniquePtr& p) noexcept {
+    friend std::ostream& operator<<(std::ostream& os, const UniquePtr& p) {
         os << p.get();
         return os;
     }
