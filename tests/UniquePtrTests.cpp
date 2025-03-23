@@ -204,3 +204,21 @@ TEST(UniquePtr, makeUniqueShouldNoThrow) {
     EXPECT_EQ(p.get(), nullptr);
 }
 
+TEST(UniquePtr, shouldHandleVoidType) {
+    struct IntDeleter {
+        void operator()(void* ptr) const {
+            auto to_remove = static_cast<int*>(ptr);
+            delete to_remove;
+        }
+    };
+
+    UniquePtr<void, IntDeleter> p{new int{7}};
+
+    auto old = p.release();
+    auto deleter = p.get_deleter();
+
+    deleter(old);
+
+    EXPECT_EQ(p.get(), nullptr);
+}
+

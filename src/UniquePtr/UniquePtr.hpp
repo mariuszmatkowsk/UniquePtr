@@ -8,6 +8,7 @@ namespace foo {
 template <typename T>
 struct default_delete {
     constexpr void operator()(T* ptr) {
+        static_assert(!std::is_void_v<T>, "can't delete pointer to incomplete type");
         delete ptr;
     }
 
@@ -25,6 +26,9 @@ public:
 
     explicit constexpr UniquePtr(pointer ptr) noexcept
         : ptr_{ptr}, deleter_{D{}} {}
+
+    explicit constexpr UniquePtr(pointer ptr, deleter_type deleter) noexcept
+        : ptr_{ptr}, deleter_{std::move(deleter)} {}
 
     constexpr ~UniquePtr() {
         if (ptr_) deleter_(ptr_);
@@ -65,13 +69,23 @@ public:
         std::ranges::swap(deleter_,  u.deleter_);
     }
 
-    constexpr element_type& operator*()  const noexcept { return *ptr_; }
+    constexpr std::add_lvalue_reference_t<element_type>
+                            operator*()  const noexcept { return *ptr_; }
     constexpr pointer       operator->() const noexcept { return  ptr_; }
     constexpr pointer       get()        const noexcept { return  ptr_; }
 
+    constexpr deleter_type& get_deleter() noexcept {
+        return deleter_;
+    }
+
+    constexpr const deleter_type& get_deleter() const noexcept {
+        return deleter_;
+    }
+
     constexpr explicit operator bool() const noexcept { return ptr_; }
 
-    friend std::ostream& operator<<(std::ostream& os, const UniquePtr& p) noexcept {
+    friend std::ostream& operator<<(
+            std::ostream& os, const UniquePtr& p) noexcept {
         os << p.get();
         return os;
     }
