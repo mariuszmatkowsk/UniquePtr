@@ -195,3 +195,12 @@ TEST(UniquePtr, makeUniquePtrWithCustomType) {
     EXPECT_EQ(*p, expected);
 }
 
+TEST(UniquePtr, makeUniqueShouldNoThrow) {
+    struct Foo {
+        char data[100000000000l];
+    };
+
+    const auto p = make_UniquePtr<Foo>();
+    EXPECT_EQ(p.get(), nullptr);
+}
+

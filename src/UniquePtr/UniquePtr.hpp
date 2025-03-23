@@ -87,7 +87,7 @@ private:
 
 template <typename T, typename... Args>
 UniquePtr<T> make_UniquePtr(Args&&... args) {
-    return UniquePtr<T>(new T{std::forward<Args>(args)...});
+    return UniquePtr<T>(new(std::nothrow) T{std::forward<Args>(args)...});
 }
 
 }  // namespace foo
