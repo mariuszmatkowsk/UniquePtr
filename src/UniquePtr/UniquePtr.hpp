@@ -10,6 +10,8 @@ struct default_delete {
     constexpr void operator()(T* ptr) {
         delete ptr;
     }
+
+    constexpr auto operator<=>(const default_delete&) const = default;
 };
 
 template <typename T, typename D = default_delete<T>>
@@ -73,6 +75,8 @@ public:
         os << p.get();
         return os;
     }
+
+    constexpr auto operator<=>(const UniquePtr&) const = default;
 
 private:
     pointer ptr_{};

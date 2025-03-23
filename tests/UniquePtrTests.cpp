@@ -135,7 +135,7 @@ TEST(UniquePtr, moveAssignmentOperator) {
 }
 
 TEST(UniquePtr, ostreamOperator) {
-    UniquePtr p{new int {10}};
+    UniquePtr p{new int{10}};
 
     std::stringstream ss1;
     ss1 << p;
@@ -144,6 +144,35 @@ TEST(UniquePtr, ostreamOperator) {
     ss2 << p.get();
 
     EXPECT_EQ(ss1.str(), ss2.str());
+}
+
+TEST(UniquePtr, equalOperator) {
+    UniquePtr p1{new int{20}};
+
+    EXPECT_EQ(p1, p1);
+}
+
+TEST(UniquePtr, equalOperatorConstexpr) {
+    constexpr UniquePtr<int> p;
+
+    constexpr bool result = p == p;
+
+    EXPECT_TRUE(result);
+}
+
+TEST(UniquePtr, notEqualOperator) {
+    UniquePtr p1{new int{11}};
+    UniquePtr p2{new int{13}};
+
+    EXPECT_NE(p1, p2);
+}
+
+TEST(UniquePtr, notEqualOperatorConstexpr) {
+    constexpr UniquePtr<int> p;
+
+    constexpr bool result = p != p;
+
+    EXPECT_FALSE(result);
 }
 
 
