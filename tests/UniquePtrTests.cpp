@@ -16,6 +16,10 @@ TEST(UniquePtr, createWithPointer) {
     UniquePtr p{new int{3}};
 }
 
+TEST(UniquePtr, sameSizeAsStdUniquePtr) {
+    static_assert(sizeof(UniquePtr<int>) == sizeof(std::unique_ptr<int>));
+}
+
 TEST(UniquePtr, shouldFreeMemoryWhenOutOfScope) {
     struct Foo {
         bool& is_deleted;
@@ -130,5 +134,16 @@ TEST(UniquePtr, moveAssignmentOperator) {
     EXPECT_EQ(*p1, 7);
 }
 
+TEST(UniquePtr, ostreamOperator) {
+    UniquePtr p{new int {10}};
+
+    std::stringstream ss1;
+    ss1 << p;
+
+    std::stringstream ss2;
+    ss2 << p.get();
+
+    EXPECT_EQ(ss1.str(), ss2.str());
+}
 
 

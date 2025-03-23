@@ -1,6 +1,8 @@
 #pragma once
 
+#include <ostream>
 #include <utility>
+
 namespace foo {
 
 template <typename T>
@@ -67,9 +69,16 @@ public:
 
     constexpr explicit operator bool() const noexcept { return ptr_; }
 
+    friend std::ostream& operator<<(std::ostream& os, const UniquePtr& p) noexcept {
+        os << p.get();
+        return os;
+    }
+
 private:
-    pointer      ptr_{};
-    deleter_type deleter_{};
+    pointer ptr_{};
+    [[no_unique_address]] deleter_type deleter_{};
+    // [[no_unique_address]] doesn't work on msvc compiler,
+    // use [[msvc::no_unique_address]] instead
 };
 
 }  // namespace foo
