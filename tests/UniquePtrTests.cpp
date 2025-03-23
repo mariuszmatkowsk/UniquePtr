@@ -112,5 +112,23 @@ TEST(UniquePtr, swap) {
     EXPECT_EQ(*p2, 7);
 }
 
+TEST(UniquePtr, moveConstructor) {
+    UniquePtr p1{new int{10}};
+    UniquePtr p2 = std::move(p1);
+
+    EXPECT_EQ(p1.get(), nullptr);
+    EXPECT_EQ(*p2, 10);
+}
+
+TEST(UniquePtr, moveAssignmentOperator) {
+    UniquePtr p1{new int{2}};
+    UniquePtr p2{new int{7}};
+
+    p1 = std::move(p2);
+
+    EXPECT_EQ(p2.get(), nullptr);
+    EXPECT_EQ(*p1, 7);
+}
+
 
 

@@ -29,9 +29,16 @@ public:
     UniquePtr(const UniquePtr&)            = delete;
     UniquePtr& operator=(const UniquePtr&) = delete;
 
-    // TODO: to be implemented
-    constexpr UniquePtr(UniquePtr&&)            noexcept = default;
-    constexpr UniquePtr& operator=(UniquePtr&&) noexcept = default;
+    constexpr UniquePtr(UniquePtr&& other) noexcept : UniquePtr() {
+        swap(other);
+    }
+
+    constexpr UniquePtr& operator=(UniquePtr&& other) noexcept {
+        // copy swap idiom
+        UniquePtr new_obj{std::move(other)};
+        swap(new_obj);
+        return *this;
+    }
 
     [[nodiscard]]
     constexpr pointer release() noexcept {
